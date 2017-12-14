@@ -1,71 +1,24 @@
-evaluationDependsOnChildren() // gotta make sure the children happen first
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-
-version = "1.0.0"
-
-allprojects {
-    group= "de.ellpeck.creeperhost"
-    archivesBaseName = "creeperhost"
-
-    sourceCompatibility = targetCompatibility = "1.6"
-    compileJava {
-        sourceCompatibility = targetCompatibility = "1.6"
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+		mavenCentral()
     }
-}
-
-repositories {
-    jcenter()
-    maven { url = "http://files.minecraftforge.net/maven" }
-    mavenCentral()
-}
-
-task setupDecompWorkspace
-task setupDevWorkspace
-task setupCiWorkspace
-
-subprojects {
-    version = minecraft.version  + "-" + rootProject.version    
-    
     dependencies {
-        compile rootProject
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
-    sourceSets.main.resources.srcDirs += rootProject.sourceSets.main.resources.srcDirs
+}
+apply plugin: 'forge'
 
-    jar {
-        duplicatesStrategy = 'exclude'
-        from rootProject.sourceSets.main.output
-    }
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
 
-    sourceJar {
-        duplicatesStrategy = 'exclude'
-        from rootProject.sourceSets.main.allSource
-    }
-    
-    artifacts {
-        archives sourceJar
-    }
-    
-    processResources {
-        inputs.property "version", project.version
-        inputs.property "mcversion", project.minecraft.version
-
-        from(sourceSets.main.resources.srcDirs) {
-            include 'mcmod.info'
-            expand 'version':project.version, 'mcversion':project.minecraft.version
-        }
-
-        from(sourceSets.main.resources.srcDirs) {
-            exclude 'mcmod.info'
-        }
-    }
-    
-    // task deps
-    rootProject.setupDecompWorkspace.dependsOn setupDecompWorkspace
-    rootProject.setupDevWorkspace.dependsOn setupDevWorkspace
-    rootProject.setupCiWorkspace.dependsOn setupCiWorkspace
-    rootProject.build.dependsOn build
-    rootProject.uploadArchives.dependsOn uploadArchives
+minecraft {
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "run"
+	
+	replaceIn "CreeperHost.java"
+    replace "@VERSION@", project.version.toString()
 }
