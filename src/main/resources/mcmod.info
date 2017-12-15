@@ -1,6 +1,6 @@
 [
 {
-  "modid": "creeperhost",
+  "modid": "creeperhost-noconflict",
   "name": "CreeperHost",
   "description": "Mod which allows you to purchase a server in game",
   "version": "${version}",

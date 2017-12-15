@@ -20,7 +20,7 @@ import java.io.*;
 public class CreeperHost
 {
 
-    public static final String MOD_ID = "creeperhost";
+    public static final String MOD_ID = "creeperhost-noconflict";
     public static final String NAME = "CreeperHost";
     public static final String VERSION = "@VERSION@";
     public static final Logger logger = LogManager.getLogger("creeperhost");
